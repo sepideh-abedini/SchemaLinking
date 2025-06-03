@@ -72,7 +72,7 @@ def process_data(row: Dict, save_path: str, exclude_db: List = None):
         column_info_lis.append(col_info)
 
     # 保存 schema 文件至本地
-    folder_path = rf"{save_path}\{db_id}"
+    folder_path = rf"{save_path}/{db_id}"
     os.makedirs(folder_path, exist_ok=True)
 
     for col in column_info_lis:
@@ -81,7 +81,7 @@ def process_data(row: Dict, save_path: str, exclude_db: List = None):
 
         prefix = transform_name(table_name, col_name)
 
-        with open(rf'{folder_path}\{prefix}.json', 'w', encoding='utf-8') as f:
+        with open(rf'{folder_path}/{prefix}.json', 'w', encoding='utf-8') as f:
             json.dump(col, f, ensure_ascii=False, indent=4)
 
     return column_info_lis
@@ -92,10 +92,10 @@ def build_index(row: Dict, exclude_db: List = None):
     if exclude_db is not None:
         if db_id in exclude_db:
             return
-    schema_path = rf"{save_dir}\{row['db_id']}"
+    schema_path = rf"{save_dir}/{row['db_id']}"
     vector_index = RagPipeLines.build_index_from_source(
         data_source=schema_path,
-        persist_dir=schema_path + r"\vector_store",
+        persist_dir=schema_path + r"/vector_store",
         is_vector_store_exist=False,
         index_method="VectorStoreIndex"
     )
@@ -104,12 +104,12 @@ def build_index(row: Dict, exclude_db: List = None):
 
 
 if __name__ == "__main__":
-    base_dir = r".\spider2_dev"
-    save_dir = rf"{base_dir}\schemas"
+    base_dir = r"./spider2_dev"
+    save_dir = rf"{base_dir}/schemas"
     exclude_db = []  # The databases need to exclude
 
     os.makedirs(save_dir, exist_ok=True)  # 确保目录存在
-    with open(rf"{base_dir}\tables_preprocessed.json", "r", encoding="utf-8") as f:
+    with open(rf"{base_dir}/tables_preprocessed.json", "r", encoding="utf-8") as f:
         data_lis = json.load(f)
 
     for row in data_lis:

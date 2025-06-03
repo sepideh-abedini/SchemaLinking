@@ -233,9 +233,9 @@ For a natural language question , you job is to identify and extract the correct
 which is strictly necessary for the accurate SQL statement corresponding to the question. 
 #
 Strictly output the results in a python list format:
-[<data table name>.<data field name>...]
+[<data table name>.<data field name>=<Analysis tokens based on the Question>...]
 e.g. "movies" and "ratings" are two datatable in one database,then one possible output as following:
-[movies.movie_release_year, movies.movie_title, ratings.rating_score]
+[movies.movie_release_year="Which year", movies.movie_title="title of the movie", ratings.rating_score="rating score"]
 #
 {few_examples}
 # The extraction work for this round officially begin now.
@@ -295,7 +295,7 @@ Analysis: Let’s think step by step. In the question , we are asked:
 Hint also refers to the columns = [movies.movie_release_year, movies.movie_id, ratings.rating_score]
 Based on the columns and tables, we need these Foreign_keys = [movies.movie_id = ratings.movie_id].
 Based on the tables, columns, and Foreign_keys, The set of possible cell values are = [1]. So the Schema_links are:
-Answer: [movies.movie_release_year, movies.movie_title, ratings.rating_score, movies.movie_id,ratings.movie_id]
+Answer: [movies.movie_release_year="Which year", movies.movie_title="title of the movie", ratings.rating_score="rating score", movies.movie_id="number of movies","Foreign_keys": [movies.movie_id = ratings.movie_id]]
 
 
 #
@@ -342,7 +342,7 @@ Analysis: Let’s think step by step. In the question , we are asked:
 Hint also refers to the columns = [lists_users.user_id,lists.list_followers,lists_users.user_subscriber]
 Based on the columns and tables, we need these Foreign_keys = [lists.user_id = lists_user.user_id,lists.list_id = lists_user.list_id].
 Based on the tables, columns, and Foreign_keys, The set of possible cell values are = [1, 4208563]. So the Schema_links are:
-Answer: [lists.list_followers,lists_users.user_subscriber,lists.user_id,lists_user.user_id,lists.list_id,lists_user.list_id]
+Answer: [lists.list_followers= "number of followers",lists_users.user_subscriber="user was a subscriber or not",lists_user.user_id= "user","Foreign_keys": [lists.user_id = lists_user.user_id,lists.list_id = lists_user.list_id]]
 
 ###
 """
@@ -354,9 +354,9 @@ For a natural language question , you job is to identify and extract the correct
 which is necessary for constructing the accurate SQL statement corresponding to the question. 
 #
 Strictly ensure the output is a Python list object:
-[<data table name>.<data field name>...]
+[<data table name>.<data field name>=<Analysis tokens based on the Question>...]
 e.g. "movies" and "ratings" are two datatable in one database,then one possible output as following:
-[movies.movie_release_year, movies.movie_title, ratings.rating_score]
+[movies.movie_release_year="Which year", movies.movie_title="title of the movie", ratings.rating_score="rating score"]
 #
 {few_examples}
 # The extraction work for this round officially begin now.

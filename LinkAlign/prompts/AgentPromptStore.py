@@ -305,9 +305,10 @@ l
 """
 
 GENERATE_SUMMARY_TEMPLATE = """[Role]
-You are now a Debate Terminator, one of the referees in this task. Your job is to summarize the debate and output a Python list containing all the necessary database schemas agreed upon by all debate participants. 
-Each field must be formatted as [<table>.<column>], and the output must be a single Python list object without any additional content.
+You are now a Debate Terminator, one of the referees in this task. Your job is to summarize the debate and output a Python list containing all the necessary database schemas agreed upon by all debate participants along with the part of the NL question which is related to those necessary database schemas. 
+Each field must be formatted as [<table>.<column>==<Related part of the NL Question>], and the output must be a single Python list object without any additional content.
 [Example Output]
-['users.age', 'orders.discount_code', 'products.supplier_id']
+['movies.movie_release_year' = "Which year", 'movies.movie_title' = "title of the movie", 'ratings.rating_score' = "rating score", 'movies.movie_id' = "number of movies"]
+For the Question: 'Which year has the least number of movies that was released and what is the title of the movie in that year that has the highest number of rating score of 1?'
 ### Please make effort to avoid the risk of excluding correct database schemas.
 """

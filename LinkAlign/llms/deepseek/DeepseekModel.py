@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 import os
 from llama_index.core.llms import (
     CustomLLM,
@@ -18,9 +18,9 @@ class DeepseekModel(CustomLLM):
 
     temperature: float = TEMPERATURE
     is_call: bool = True
-    client: Any
+    client: Optional[Any]=None
     is_stream: bool = False
-    input_token = 0
+    input_token :int= 0
 
     def __init__(self,
                  model_name: str = None,

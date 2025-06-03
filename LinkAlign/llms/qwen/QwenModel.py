@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Optional
 import os
 from llama_index.core.llms import (
     CustomLLM,
@@ -17,9 +17,9 @@ class QwenModel(CustomLLM):
 
     temperature: float = TEMPERATURE
     is_call: bool = True
-    client: Any
+    client: Optional[Any] = None
     is_stream: bool = False
-    input_token = 0
+    input_token :int= 0
 
     def __init__(self,
                  model_name: str = None,
@@ -33,8 +33,8 @@ class QwenModel(CustomLLM):
         api_key = QWEN_API_KEY if not api_key else api_key
         self.client = OpenAI(
             # 若没有配置环境变量，请用百炼API Key将下行替换为：api_key="sk-xxx",
-            api_key=api_key,
-            base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
+            api_key= api_key,
+            base_url="https://dashscope-intl.aliyuncs.com/compatible-mode/v1",
         )
         self.model_name = self.model_name if not model_name else model_name
         self.is_call = is_call  # is_call 为真时调用 llm 并返回交互结果，is_call 为假时仅返回调用提示词

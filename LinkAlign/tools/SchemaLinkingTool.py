@@ -41,7 +41,7 @@ class SchemaLinkingTool:
 
         Settings.llm = llm
 
-        few_examples = SCHEMA_LINKING_FEW_EXAMPLES if is_add_example else ""
+        few_examples = SCHEMA_LINKING_FEW_EXAMPLES
 
         query_template = SCHEMA_LINKING_TEMPLATE.format(few_examples=few_examples, question=question)
 
@@ -233,12 +233,12 @@ class SchemaLinkingTool:
 
         nodes = question_nodes
         # 获取所有的 index 和 id 列表
-        index_lis = [ret.index for ret in retriever_lis]
+        index_lis = [ret._index for ret in retriever_lis]
 
         sub_ids = get_ids_from_source(nodes)
 
         for ind in range(retrieve_turn_n):
-            logger.info(f"[Query Rewriting Turn {ind + 1}]")
+            # logger.info(f"[Query Rewriting Turn {ind + 1}]")
             if not remove_duplicate:
                 # 这里没有将检索范围设置为 sub_ids
                 nodes += cls.parallel_retrieve(retriever_lis, [enhanced_question])
@@ -267,10 +267,10 @@ class SchemaLinkingTool:
             # judge 进行分析
             analysis = llm.complete(JUDGE_TEMPLATE.format(question=question, context=schemas)).text
 
-            logger.info("[analysis]" + analysis)
+            # logger.info("[analysis]" + analysis)
             # annotator 添加注释
             annotation = llm.complete(ANNOTATOR_TEMPLATE.format(question=question, analysis=analysis)).text
-            logger.info("[annotation]" + annotation)
+            # logger.info("[annotation]" + annotation)
             enhanced_question = question + annotation
 
         if not remove_duplicate:
@@ -448,7 +448,7 @@ class SchemaLinkingTool:
             llm=None,
             query: str = None,
             context: str = None,
-            logger=None
+            # logger=None
     ):
         """
             Step there: extract schemas for SQL generation.
@@ -465,7 +465,7 @@ class SchemaLinkingTool:
                                                       context_str=context_str,
                                                       question=query)
         predict_schema = llm.complete(query).text
-        logger.info("[schema linking result]" + "\n" + predict_schema)
+        # logger.info("[schema linking result]" + "\n" + predict_schema)
 
         return predict_schema
 
@@ -515,7 +515,7 @@ class SchemaLinkingTool:
             data_scientist_debate = llm.complete(data_scientist_prompt).text
             chat_history.append(
                 f"""[Debate Turn: {i + 1}, Agent Name:"data scientist", Debate Content:{data_scientist_debate}]""")
-        logger.info("[multi-agent debate chat history]" + "\n".join(chat_history))
+        # logger.info("[multi-agent debate chat history]" + "\n".join(chat_history))
         summary_prompt = GENERATE_FAIR_EVAL_DEBATE_TEMPLATE.format(
             source_text=source_text,
             chat_history="\n".join(chat_history),
@@ -524,7 +524,7 @@ class SchemaLinkingTool:
         )
         schema = llm.complete(summary_prompt).text
 
-        logger.info("[debate summary as schema linking result]" + "\n".join(schema))
+        # logger.info("[debate summary as schema linking result]" + "\n".join(schema))
 
         return schema
 

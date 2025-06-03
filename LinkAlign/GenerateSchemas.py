@@ -17,31 +17,32 @@ filter_llm = QwenModel(model_name="qwen-turbo", temperature=0.42)
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Run the script with external parameters.")
-    parser.add_argument("--save_path", type=str, required=False, default=r".\spider2_dev\instance_schemas",
+    parser.add_argument("--save_path", type=str, required=False, default=r"./spider2_dev/instance_schemas",
                         help="Path for storing the schema obtained through retrieval and filtering.")
-    parser.add_argument("--schema_path", type=str, required=False, default=r".\spider2_dev\schemas",
+    parser.add_argument("--schema_path", type=str, required=False, default=r"./spider2_dev/schemas",
                         help="path for storing database schema information.")
-    parser.add_argument("--dataset", type=str, required=False, default=r".\spider2_dev\spider2_dev_preprocessed.json")
-    parser.add_argument("--db_info_path", type=str, required=False, default=r'.\spider2_dev\db_info.json')
-    parser.add_argument("--links_save_path", type=str, required=False, default=r".\spider2_dev\schema_links")
-    parser.add_argument("--external_info_path", type=str, required=False, default=r".\spider2_dev\external_knowledge")
+    parser.add_argument("--dataset", type=str, required=False, default=r"./spider2_dev/spider2_dev_preprocessed.json")
+    parser.add_argument("--db_info_path", type=str, required=False, default=r'./spider2_dev/db_info.json')
+    parser.add_argument("--links_save_path", type=str, required=False, default=r"./spider2_dev/schema_links")
+    parser.add_argument("--external_info_path", type=str, required=False, default=r"./spider2_dev/external_knowledge")
 
     return parser.parse_args()
 
-
+#TODO: FIX ME
 def load_db_size(db_id: str):
-    db_size = [row["count"] for row in db_info if row["db_id"].lower() == db_id.lower()][0]
-    return db_size
+    # db_size = [row["count"] for row in db_info if row["db_id"].lower() == db_id.lower()][0]
+    # return db_size
+    return 4
 
 
 def parse_schemas_from_file(db_id: str):
     base_schema_dir = schema_path
-    file_lis = get_sql_files(rf"{base_schema_dir}\{db_id}", ".json")
+    file_lis = get_sql_files(rf"{base_schema_dir}/{db_id}", ".json")
 
     schema_lis = []
     for f in file_lis:
         try:
-            file_path = rf"{base_schema_dir}\{db_id}\{f}.json"
+            file_path = rf"{base_schema_dir}/{db_id}/{f}.json"
             with open(file_path, 'r', encoding="utf-8") as file:
                 col_info = json.load(file)
             meta_data = col_info["meta_data"]
@@ -199,7 +200,7 @@ def load_external_knowledge(instance_id):
     all_ids = get_files(path, ".txt")
 
     if instance_id in all_ids:
-        with open(rf"{path}\{instance_id}.txt", "r", encoding="utf-8") as f:
+        with open(rf"{path}/{instance_id}.txt", "r", encoding="utf-8") as f:
             external = f.read()
         if len(external) > 50:
             external = "\n####[External Prior Knowledge]:\n" + external + "\n"
@@ -218,26 +219,26 @@ def get_schema(
         post_retrieval_size: int = 90,  # 最好与 reserve_size 设置一致
         post_retrieval_turn: int = 2,
         reserve_rate: float = 0.6,
-        open_schema_linking: bool = False
+        open_schema_linking: bool = True
 ):
     """ 检索问题需要的数据库模式 """
     file_name = instance_id + "_agent"
-    if os.path.isfile(rf"{save_path}\{file_name}.xlsx"):
-        return None
+    # if os.path.isfile(rf"{save_path}/{file_name}.xlsx"):
+    #     return None
 
     db_size = load_db_size(db_id)
 
     if db_size <= reserve_size:
         # 对于极小规模数据库，直接保留全部模式
         df = parse_schemas_from_file(db_id)
-        df.to_excel(rf"{save_path}\{file_name}.xlsx", index=False)
-        return df
+        df.to_excel(rf"{save_path}/{file_name}.xlsx", index=False)
+        # return df
 
     # 加载 schema 向量库索引
-    vector_dir = rf"{schema_path}\{db_id}"
+    vector_dir = rf"{schema_path}/{db_id}"
     vector_index = RagPipeLines.build_index_from_source(
         data_source=vector_dir,
-        persist_dir=vector_dir + r"\vector_store",
+        persist_dir=vector_dir + r"/vector_store",
         is_vector_store_exist=True,
         index_method="VectorStoreIndex"
     )
@@ -294,7 +295,7 @@ def get_schema(
                                                                           )
     sub_df = parse_schemas_from_nodes(nodes_lis)
     df = pd.concat([df, sub_df], axis=0)
-    df.to_excel(rf"{save_path}\{file_name}.xlsx", index=False)
+    df.to_excel(rf"{save_path}/{file_name}.xlsx", index=False)
 
     if open_schema_linking:
         # 模式链接，提取生成 SQL 语句所需的表和列
@@ -304,7 +305,7 @@ def get_schema(
                                                                  turn_n=1, linker_num=3
                                                                  )
         schema_links = schema_links.replace("`", "").replace("\n", "").replace("python", "")
-        with open(rf".\spider2_dev\schema_links\{file_name}.txt", "w", encoding="utf-8") as f:
+        with open(rf"./spider2_dev/schema_links/{file_name}.txt", "w", encoding="utf-8") as f:
             f.write(schema_links)
 
         return df, schema_links
@@ -315,14 +316,14 @@ def get_schema(
 def process_row(index, row, pbar):
     external = load_external_knowledge(row["instance_id"])
     question = row["question"] + external if external else row["question"]
-    try:
-        get_schema(db_id=row["db_id"],
-                   question=question,
-                   instance_id=row["instance_id"])
-    except Exception as e:
-        print(e)
+    # try:
+    get_schema(db_id=row["db_id"],
+               question=question,
+               instance_id=row["instance_id"])
+    # except Exception as e:
+    #     print(e)
 
-    pbar.update(1)
+    # pbar.update(1)
 
 
 if __name__ == "__main__":
@@ -339,10 +340,14 @@ if __name__ == "__main__":
 
     val_df = load_data(dataset_path)
 
-    with tqdm(total=val_df.shape[0]) as pbar:
-        inputs = []
-        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
-            for index, row in val_df.iterrows():
-                inputs.append((index, row, pbar))
+    # with tqdm(total=val_df.shape[0]) as pbar:
+    #     inputs = []
+    #     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+    #         for index, row in val_df.iterrows():
+    #             inputs.append((index, row, pbar))
+    #
+    #         executor.map(lambda x: process_row(*x), inputs)
+    #     print(save_path)
+    for i, row in val_df.iterrows():
+        process_row(i, row,None)
 
-            executor.map(lambda x: process_row(*x), inputs)
