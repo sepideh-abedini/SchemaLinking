@@ -1,0 +1,11 @@
+{
+    "column_name": "ssn",
+    "column_descriptions": null,
+    "column_types": "integer",
+    "sample_rows": [],
+    "meta_data": {
+        "db_id": "mycars",
+        "table_name": "person",
+        "table_to_projDataset": ""
+    }
+}

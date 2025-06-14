@@ -1,0 +1,179 @@
+[
+  {
+    "db_id": "mycars",
+    "table_names_original": [
+      "person",
+      "carownership",
+      "car"
+    ],
+    "table_names": [
+      "person",
+      "carownership",
+      "car"
+    ],
+    "column_names": [
+      [
+        0,
+        "pid"
+      ],
+      [
+        0,
+        "name"
+      ],
+      [
+        0,
+        "age"
+      ],
+      [
+        0,
+        "ssn"
+      ],
+      [
+        1,
+        "pid"
+      ],
+      [
+        1,
+        "cid"
+      ],
+      [
+        2,
+        "cid"
+      ],
+      [
+        2,
+        "name"
+      ],
+      [
+        2,
+        "hp"
+      ],
+      [
+        2,
+        "type"
+      ]
+    ],
+    "column_names_original": [
+      [
+        0,
+        "pid"
+      ],
+      [
+        0,
+        "name"
+      ],
+      [
+        0,
+        "age"
+      ],
+      [
+        0,
+        "ssn"
+      ],
+      [
+        1,
+        "pid"
+      ],
+      [
+        1,
+        "cid"
+      ],
+      [
+        2,
+        "cid"
+      ],
+      [
+        2,
+        "name"
+      ],
+      [
+        2,
+        "hp"
+      ],
+      [
+        2,
+        "type"
+      ]
+    ],
+    "column_types": [
+      "text",
+      "text",
+      "integer",
+      "integer",
+      "text",
+      "text",
+      "text",
+      "text",
+      "integer",
+      "text"
+    ],
+    "primary_keys": [
+      0,
+      4,
+      5,
+      6
+    ],
+    "foreign_keys": [
+      [
+        0,
+        4
+      ],
+      [
+        5,
+        6
+      ]
+    ],
+    "column_descriptions": [
+      [
+        0,
+        null
+      ],
+      [
+        0,
+        null
+      ],
+      [
+        0,
+        null
+      ],
+      [
+        0,
+        null
+      ],
+      [
+        1,
+        null
+      ],
+      [
+        1,
+        null
+      ],
+      [
+        2,
+        null
+      ],
+      [
+        2,
+        null
+      ],
+      [
+        2,
+        null
+      ],
+      [
+        2,
+        null
+      ]
+    ],
+    "sample_rows": {
+      "person": [],
+      "car": [],
+      "carownership": []
+    },
+    "table_to_projDataset": {
+      "person": "",
+      "car":"",
+      "carownership": ""
+    }
+  }
+]

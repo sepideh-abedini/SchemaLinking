@@ -1,0 +1,31 @@
+[
+    {
+
+        "instance_id": "bq113",
+        "external_knowledge": null,
+        "question_id": 340,
+        "db_id": "mycars",
+        "question": "Find Social Security Number and age of person who have a 'Ferrari' and a 'BMW'",
+        "evidence": "",
+        "difficulty": "simple",
+        "query": "SELECT Person.SSN, Person.Age\nFROM Person\nJOIN CarOwnership AS co1 ON Person.PID = co1.PID\nJOIN Car AS car1 ON co1.CID = car1.CID\nJOIN CarOwnership AS co2 ON Person.PID = co2.PID\nJOIN Car AS car2 ON co2.CID = car2.CID\nWHERE car1.Name = 'Ferrari' AND car2.Name = 'BMW';",
+        "evidence_added": true,
+        "question_toks": [
+            "Find",
+            "Social",
+            "Security",
+            "Number",
+            "and",
+            "age",
+            "of",
+            "person",
+            "who",
+            "have",
+            "a",
+            "'Ferrari'",
+            "and",
+            "a",
+            "'BMW'"
+        ]
+    }
+]

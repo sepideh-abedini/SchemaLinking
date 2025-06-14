@@ -1,0 +1,1 @@
+['person.ssn', 'person.age', 'carownership.pid', 'carownership.cid', 'car.name']
